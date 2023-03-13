@@ -26,7 +26,7 @@ export default class AnimalController {
             tipo: request.input('tipo'),
         })
 
-        Ws.io.emit('new:animal',animal)
+        Ws.io.emit('new:animal')
         return response.created({
             'status': 201,
             'mensaje': 'Los datos fueron almacenados correctamente.',
