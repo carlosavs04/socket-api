@@ -30,3 +30,8 @@ Route.group(() => {
   Route.post('/jugador', 'JugadorController.create')
   Route.get('/jugadores', 'JugadorController.allJugadores')
 }).prefix('api/v1/jugadores')
+
+Route.group(() => {
+  Route.post('/consola', 'ConsolasController.createConsola')
+  Route.get('/consolas', 'ConsolasController.getConsolas')
+}).prefix('api/v1/consolas')
