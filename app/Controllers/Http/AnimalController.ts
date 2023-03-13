@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Animal from 'App/Models/Animal'
+import Ws from '../../../services/Ws'
 
 export default class AnimalController {
     public async create({ request, response }: HttpContextContract) {
@@ -25,6 +26,7 @@ export default class AnimalController {
             tipo: request.input('tipo'),
         })
 
+        Ws.io.emit('new:animal',animal)
         return response.created({
             'status': 201,
             'mensaje': 'Los datos fueron almacenados correctamente.',
@@ -35,6 +37,7 @@ export default class AnimalController {
 
     public async allAnimales() {
         const animales = Animal.query().select('*')
+
 
         return animales
     }
