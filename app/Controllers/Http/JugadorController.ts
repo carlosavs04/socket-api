@@ -1,16 +1,18 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
-import Animal from 'App/Models/Animal'
-import Ws from '../../../services/Ws'
+import Jugador from 'App/Models/Jugador'
 
-export default class AnimalController {
+export default class JugadorController {
     public async create({ request, response }: HttpContextContract) {
         await request.validate({
             schema: schema.create({
-                nombre: schema.string([
-                    rules.maxLength(20),
+                nombres: schema.string([
+                    rules.maxLength(40),
                 ]),
-                tipo: schema.string([
+                apellidos: schema.string([
+                    rules.maxLength(40),
+                ]),
+                equipo: schema.string([
                     rules.maxLength(20),
                 ]),
             }),
@@ -21,23 +23,23 @@ export default class AnimalController {
             }
         })
 
-        const animal = await Animal.create({
-            nombre: request.input('nombre'),
-            tipo: request.input('tipo'),
+        const jugador = await Jugador.create({
+            nombres: request.input('nombres'),
+            apellidos: request.input('apellidos'),
+            equipo: request.input('equipo'),
         })
 
-        Ws.io.emit('new:animal',animal)
         return response.created({
             'status': 201,
             'mensaje': 'Los datos fueron almacenados correctamente.',
             'error': [],
-            'data': animal,
+            'data': jugador,
         })
     }
 
-    public async allAnimales() {
-        const animales = Animal.query().select('*')
+    public async allJugadores() {
+        const jugadores = Jugador.query().select('*')
 
-        return animales
+        return jugadores
     }
 }

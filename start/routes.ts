@@ -24,3 +24,9 @@ Route.group(() => {
   Route.post('/animal', 'AnimalController.create')
   Route.get('/animales', 'AnimalController.allAnimales')
 }).prefix('api/v1/animales')
+
+
+Route.group(() => {
+  Route.post('/jugador', 'JugadorController.create')
+  Route.get('/jugadores', 'JugadorController.allJugadores')
+}).prefix('api/v1/jugadores')
