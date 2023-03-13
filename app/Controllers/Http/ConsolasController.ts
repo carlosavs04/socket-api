@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Consola from 'App/Models/Consola'
-
+import Event from '@ioc:Adonis/Core/Event'
 
 
 export default class ConsolasController {
@@ -19,16 +19,18 @@ export default class ConsolasController {
       }
   })
 
-  const consola = await Consola.create({
-      nombre: request.input('nombre'),
-  })
+    var consola = await Consola.create({
+        nombre: request.input('nombre'),
+    })
 
-  return response.created({
-      'status': 201,
-      'mensaje': 'Los datos fueron almacenados correctamente.',
-      'error': [],
-      'data': consola
-  })
+    Event.emit('new:consola', { id: consola.id })
+
+    return response.created({
+        'status': 201,
+        'mensaje': 'Los datos fueron almacenados correctamente.',
+        'error': [],
+        'data': consola
+    })
   }
 
   public async getConsolas(){
