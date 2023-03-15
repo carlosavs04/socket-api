@@ -34,4 +34,5 @@ Route.group(() => {
 Route.group(() => {
   Route.post('/consola', 'ConsolasController.createConsola')
   Route.get('/consolas', 'ConsolasController.getConsolas')
+  Route.get('/consolas/stream', 'ConsolasController.onNewConsola')
 }).prefix('api/v1/consolas')
