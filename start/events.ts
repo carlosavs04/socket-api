@@ -10,5 +10,5 @@
 
 import Event from '@ioc:Adonis/Core/Event'
 
-Event.on('new:consola', 'ConsolaListener.onNewConsola')
+Event.on('new:consola', 'Consola.onNewConsola')
 
