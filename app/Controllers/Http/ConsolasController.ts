@@ -2,7 +2,6 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Consola from 'App/Models/Consola'
 import Event from '@ioc:Adonis/Core/Event'
-import type { EventsList } from '@ioc:Adonis/Core/Event'
 import { Readable } from 'stream'
 
 
@@ -41,31 +40,31 @@ export default class ConsolasController {
     return consolas
   }
 
-  public async onNewConsola({ response }) {
+  public async onNewConsola({ response }: HttpContextContract) {
     const stream = new Readable()
+
+    const consolas = await Consola.query().select('*')
+    const data = {
+      'mensaje': 'Nueva consola creada.',
+      'data': consolas
+    }
+       
     stream._read = () => {}
     const sendEvent = async () => {
-       const consolas = await Consola.query().select('*')
-       const data = {
-          'mensaje': 'Nueva consola creada.',
-          'data': consolas
-       }
-       
        stream.push(`data: ${JSON.stringify(data)}\n\n`)
       }
 
       const interval = setInterval(sendEvent, 5000)
-      response.on('close', () => {
+      stream.on('close', () => {
         clearInterval(interval)
         stream.destroy()
       })
 
-      response.writeHead(200, {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-      })
+      response.header('Content-Type', 'text/event-stream')
+      response.header('Cache-Control', 'no-cache')
+      response.header('Connection', 'keep-alive')
 
       stream.pipe(response.response)
+      return response.response
   }
 }
